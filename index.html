@@ -3,12 +3,14 @@
 <head>
   <title>Radius Map Tool</title>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCr2tCaCB7A6AQIUT_CAB1pM1qaV7bXLEQ&libraries=places"></script>
+  <script src="script.js" defer></script>
+
   <style>
     #map {
       height: 500px;
       width: 100%;
     }
-    input {
+    input, button {
       padding: 8px;
       margin: 5px;
     }
@@ -20,9 +22,9 @@
 
 <input id="address" type="text" placeholder="Enter address (e.g. T Nagar, Chennai)">
 <input id="radius" type="number" placeholder="Radius in KM">
-<button onclick="drawRadius()">Show Radius</button>
+<button id="drawBtn">Show Radius</button>
 
 <div id="map"></div>
 
-
-
+</body>
+</html>
