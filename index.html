@@ -1,39 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Radius Search App</title>
-
-  <script async
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCr2tCaCB7A6AQIUT_CAB1pM1qaV7bXLEQ
-&libraries=places&callback=initMap">
-  </script>
-
-  <script src="script.js" defer></script>
+  <title>Radius Search Tool</title>
 
   <style>
-    #map { height: 500px; width: 100%; }
-    input, select, button { padding: 8px; margin: 5px; }
+    #map {
+      height: 500px;
+      width: 100%;
+    }
+    input, select, button {
+      padding: 8px;
+      margin: 5px;
+    }
   </style>
 </head>
 <body>
 
 <h3>Radius Search Tool</h3>
 
+<!-- Address Search -->
 <input id="address" type="text" placeholder="Enter location">
 
+<!-- Radius -->
 <input id="radius" type="number" placeholder="Radius in KM">
 
+<button id="drawBtn">Draw Radius</button>
+
+<br>
+
+<!-- Filter -->
 <select id="type">
   <option value="restaurant">Restaurants</option>
-  <option value="hospital">Hospitals</option>
   <option value="hotel">Hotels</option>
+  <option value="hospital">Hospitals</option>
   <option value="school">Schools</option>
-  <option value="store">Stores</option>
 </select>
 
 <button id="searchBtn">Search Inside Radius</button>
 
 <div id="map"></div>
+
+<!-- IMPORTANT: Load YOUR JS FIRST -->
+<script src="script.js"></script>
+
+<!-- THEN load Google Maps -->
+<script async
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCr2tCaCB7A6AQIUT_CAB1pM1qaV7bXLEQ&libraries=places,geometry&callback=initMap">
+</script>
 
 </body>
 </html>
