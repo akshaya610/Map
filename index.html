@@ -1,19 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Chennai Map</title>
+  <title>Radius Map Tool</title>
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+  <style>
+    #map {
+      height: 500px;
+      width: 100%;
+    }
+    input {
+      padding: 8px;
+      margin: 5px;
+    }
+  </style>
 </head>
 <body>
 
-<h3>Enter Address:</h3>
-<input type="text" id="address" placeholder="Eg: T Nagar Chennai">
-<button onclick="showLocation()">Show</button>
+<h3>Chennai Radius Tool</h3>
 
-<div id="map" style="height:500px;"></div>
+<input id="address" type="text" placeholder="Enter address (e.g. T Nagar, Chennai)">
+<input id="radius" type="number" placeholder="Radius in KM">
+<button onclick="drawRadius()">Show Radius</button>
 
-<script src="script.js"></script>
+<div id="map"></div>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCr2tCaCB7A6AQIUT_CAB1pM1qaV7bXLEQ&callback=initMap" async defer></script>
+<script>
 
-</body>
-</html>
