@@ -93,6 +93,7 @@ function searchPlaces() {
   const request = {
     location: centerLocation,
     radius: currentRadius,
+    keyword: type,
     type: [type]
   };
 
