@@ -1,15 +1,24 @@
+<script>
 let map;
+let geocoder;
+let circle;
 
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
-    center: { lat: 13.0827, lng: 80.2707 },
-    zoom: 12
+    center: { lat: 13.0827, lng: 80.2707 }, // Chennai
+    zoom: 12,
   });
+  geocoder = new google.maps.Geocoder();
 }
 
-function showLocation() {
+function drawRadius() {
   const address = document.getElementById("address").value;
-  const geocoder = new google.maps.Geocoder();
+  const radiusKm = document.getElementById("radius").value;
+
+  if (!address || !radiusKm) {
+    alert("Enter address and radius");
+    return;
+  }
 
   geocoder.geocode({ address: address }, function(results, status) {
     if (status === "OK") {
@@ -19,20 +28,29 @@ function showLocation() {
 
       new google.maps.Marker({
         map: map,
-        position: location
+        position: location,
       });
 
-      const circle = new google.maps.Circle({
+      if (circle) {
+        circle.setMap(null);
+      }
+
+      circle = new google.maps.Circle({
         map: map,
         center: location,
-        radius: 2000,
+        radius: radiusKm * 1000, // km to meters
         fillColor: "#FF0000",
-        fillOpacity: 0.3
+        fillOpacity: 0.2,
+        strokeColor: "#FF0000",
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
       });
 
-      map.fitBounds(circle.getBounds());
     } else {
-      alert("Address not found");
+      alert("Geocode failed: " + status);
     }
   });
 }
+
+window.onload = initMap;
+</script>
