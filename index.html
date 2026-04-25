@@ -1,30 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Radius Map Tool</title>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCr2tCaCB7A6AQIUT_CAB1pM1qaV7bXLEQ&libraries=places"></script>
-  <script src="script.js" defer></script>
-
+  <title>Test Map</title>
   <style>
-    #map {
-      height: 500px;
-      width: 100%;
-    }
-    input, button {
-      padding: 8px;
-      margin: 5px;
-    }
+    #map { height: 500px; width: 100%; }
   </style>
 </head>
 <body>
 
-<h3>Chennai Radius Tool</h3>
-
-<input id="address" type="text" placeholder="Enter address (e.g. T Nagar, Chennai)">
-<input id="radius" type="number" placeholder="Radius in KM">
-<button id="drawBtn">Show Radius</button>
-
+<h3>Map Test</h3>
 <div id="map"></div>
+
+<script>
+function initMap() {
+  new google.maps.Map(document.getElementById("map"), {
+    center: { lat: 13.0827, lng: 80.2707 },
+    zoom: 12
+  });
+}
+</script>
+
+<script async
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCr2tCaCB7A6AQIUT_CAB1pM1qaV7bXLEQ&callback=initMap">
+</script>
 
 </body>
 </html>
