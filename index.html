@@ -1,28 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Test Map</title>
+  <title>Radius Search App</title>
+
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCr2tCaCB7A6AQIUT_CAB1pM1qaV7bXLEQ
+&libraries=places&callback=initMap">
+  </script>
+
+  <script src="script.js" defer></script>
+
   <style>
     #map { height: 500px; width: 100%; }
+    input, select, button { padding: 8px; margin: 5px; }
   </style>
 </head>
 <body>
 
-<h3>Map Test</h3>
+<h3>Radius Search Tool</h3>
+
+<input id="address" type="text" placeholder="Enter location">
+
+<input id="radius" type="number" placeholder="Radius in KM">
+
+<select id="type">
+  <option value="restaurant">Restaurants</option>
+  <option value="hospital">Hospitals</option>
+  <option value="hotel">Hotels</option>
+  <option value="school">Schools</option>
+  <option value="store">Stores</option>
+</select>
+
+<button id="searchBtn">Search Inside Radius</button>
+
 <div id="map"></div>
-
-<script>
-function initMap() {
-  new google.maps.Map(document.getElementById("map"), {
-    center: { lat: 13.0827, lng: 80.2707 },
-    zoom: 12
-  });
-}
-</script>
-
-<script async
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCr2tCaCB7A6AQIUT_CAB1pM1qaV7bXLEQ&callback=initMap">
-</script>
 
 </body>
 </html>
