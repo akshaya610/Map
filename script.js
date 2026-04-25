@@ -1,62 +1,111 @@
 let map;
-let geocoder;
-let circle;
 let marker;
+let circle;
+let autocomplete;
+let service;
+let placeMarkers = [];
 
 function initMap() {
+  const chennai = { lat: 13.0827, lng: 80.2707 };
+
   map = new google.maps.Map(document.getElementById("map"), {
-    center: { lat: 13.0827, lng: 80.2707 }, // Chennai
+    center: chennai,
     zoom: 12,
   });
 
-  geocoder = new google.maps.Geocoder();
+  service = new google.maps.places.PlacesService(map);
 
-  document.getElementById("drawBtn").addEventListener("click", drawRadius);
+  // Autocomplete (Requirement 1)
+  const input = document.getElementById("address");
+  autocomplete = new google.maps.places.Autocomplete(input);
+
+  autocomplete.addListener("place_changed", function () {
+    const place = autocomplete.getPlace();
+
+    if (!place.geometry) {
+      alert("No details available");
+      return;
+    }
+
+    const location = place.geometry.location;
+
+    map.setCenter(location);
+    map.setZoom(14);
+
+    if (marker) marker.setMap(null);
+
+    marker = new google.maps.Marker({
+      map: map,
+      position: location,
+    });
+  });
+
+  document.getElementById("searchBtn").addEventListener("click", searchPlaces);
 }
 
-function drawRadius() {
-  const address = document.getElementById("address").value;
+function searchPlaces() {
   const radiusKm = document.getElementById("radius").value;
+  const type = document.getElementById("type").value;
 
-  if (!address || !radiusKm) {
-    alert("Enter address and radius");
+  if (!marker || !radiusKm) {
+    alert("Select location and radius");
     return;
   }
 
-  geocoder.geocode({ address: address }, function(results, status) {
-    if (status === "OK") {
-      const location = results[0].geometry.location;
+  const location = marker.getPosition();
 
-      map.setCenter(location);
+  // Draw circle (Requirement 2 & 3)
+  if (circle) circle.setMap(null);
 
-      // Remove old marker
-      if (marker) marker.setMap(null);
+  circle = new google.maps.Circle({
+    map: map,
+    center: location,
+    radius: radiusKm * 1000,
+    fillColor: "#FF0000",
+    fillOpacity: 0.2,
+    strokeColor: "#FF0000",
+    strokeWeight: 2,
+  });
 
-      marker = new google.maps.Marker({
-        map: map,
-        position: location,
-      });
+  // Clear old markers
+  placeMarkers.forEach(m => m.setMap(null));
+  placeMarkers = [];
 
-      // Remove old circle
-      if (circle) circle.setMap(null);
+  // Search inside radius (Requirement 4 & 5)
+  const request = {
+    location: location,
+    radius: radiusKm * 1000,
+    type: [type] // filter
+  };
 
-      circle = new google.maps.Circle({
-        map: map,
-        center: location,
-        radius: radiusKm * 1000, // km → meters
-        fillColor: "#FF0000",
-        fillOpacity: 0.2,
-        strokeColor: "#FF0000",
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
+  service.nearbySearch(request, function(results, status) {
+    if (status === google.maps.places.PlacesServiceStatus.OK) {
+
+      results.forEach(place => {
+        const placeLoc = place.geometry.location;
+
+        // Extra strict filter inside circle
+        const distance = google.maps.geometry.spherical.computeDistanceBetween(
+          location,
+          placeLoc
+        );
+
+        if (distance <= radiusKm * 1000) {
+
+          const m = new google.maps.Marker({
+            map: map,
+            position: placeLoc,
+            title: place.name
+          });
+
+          placeMarkers.push(m);
+        }
       });
 
     } else {
-      alert("Geocode failed: " + status);
+      alert("No results found");
     }
   });
 }
 
-// Initialize after page load
-window.initMap = initMap;
-window.onload = initMap;
+
