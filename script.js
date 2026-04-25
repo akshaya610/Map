@@ -1,14 +1,17 @@
-<script>
 let map;
 let geocoder;
 let circle;
+let marker;
 
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
     center: { lat: 13.0827, lng: 80.2707 }, // Chennai
     zoom: 12,
   });
+
   geocoder = new google.maps.Geocoder();
+
+  document.getElementById("drawBtn").addEventListener("click", drawRadius);
 }
 
 function drawRadius() {
@@ -26,19 +29,21 @@ function drawRadius() {
 
       map.setCenter(location);
 
-      new google.maps.Marker({
+      // Remove old marker
+      if (marker) marker.setMap(null);
+
+      marker = new google.maps.Marker({
         map: map,
         position: location,
       });
 
-      if (circle) {
-        circle.setMap(null);
-      }
+      // Remove old circle
+      if (circle) circle.setMap(null);
 
       circle = new google.maps.Circle({
         map: map,
         center: location,
-        radius: radiusKm * 1000, // km to meters
+        radius: radiusKm * 1000, // km → meters
         fillColor: "#FF0000",
         fillOpacity: 0.2,
         strokeColor: "#FF0000",
@@ -52,5 +57,6 @@ function drawRadius() {
   });
 }
 
+// Initialize after page load
+window.initMap = initMap;
 window.onload = initMap;
-</script>
