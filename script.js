@@ -80,49 +80,75 @@ function drawRadius() {
 
 // Search inside radius
 function searchPlaces() {
-  const type = document.getElementById("type").value;
 
   if (!centerLocation || !currentRadius) {
     alert("Draw radius first");
     return;
   }
 
-  // clear old markers
   placeMarkers.forEach(m => m.setMap(null));
   placeMarkers = [];
 
-  const request = {
-    location: centerLocation,
-    radius: currentRadius,
-    keyword: type,
-    type: [type]
-  };
+  const categories = [
+    "restaurant",
+    "hospital",
+    "pharmacy",
+    "temple",
+    "school",
+    "store"
+  ];
 
-  service.nearbySearch(request, function(results, status) {
-    if (status === google.maps.places.PlacesServiceStatus.OK) {
+  const uniquePlaces = new Map();
 
-      results.forEach(place => {
-        const placeLoc = place.geometry.location;
+  categories.forEach(category => {
 
-        const distance = google.maps.geometry.spherical.computeDistanceBetween(
-          centerLocation,
-          placeLoc
-        );
+    const request = {
+      location: centerLocation,
+      radius: currentRadius,
+      keyword: category
+    };
 
-        // ensure inside circle
-        if (distance <= currentRadius) {
-          const m = new google.maps.Marker({
-            map: map,
-            position: placeLoc,
-            title: place.name
-          });
+    service.nearbySearch(request, function(results, status, pagination) {
 
-          placeMarkers.push(m);
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+
+        results.forEach(place => {
+
+          const placeLoc = place.geometry.location;
+
+          // 🔥 STRICT FILTER (inside circle only)
+          const distance = google.maps.geometry.spherical.computeDistanceBetween(
+            centerLocation,
+            placeLoc
+          );
+
+          if (distance <= currentRadius) {
+
+            if (!uniquePlaces.has(place.place_id)) {
+              uniquePlaces.set(place.place_id, place);
+
+              const marker = new google.maps.Marker({
+                map: map,
+                position: placeLoc,
+                title: place.name,
+                icon: getIcon(category)
+              });
+
+              placeMarkers.push(marker);
+            }
+
+          }
+
+        });
+
+        // pagination (more results)
+        if (pagination && pagination.hasNextPage) {
+          setTimeout(() => pagination.nextPage(), 1500);
         }
-      });
+      }
 
-    } else {
-      alert("No results found");
-    }
+    });
+
   });
+}
 }
