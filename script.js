@@ -72,6 +72,7 @@ function drawRadius() {
     fillOpacity: 0.2,
     strokeColor: "#FF0000",
     strokeWeight: 2,
+    clickable: false
   });
 
   map.fitBounds(circle.getBounds());
