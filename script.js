@@ -77,6 +77,19 @@ function drawRadius() {
 
   map.fitBounds(circle.getBounds());
 }
+//get icons
+function getIcon(type) {
+  const icons = {
+    restaurant: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
+    hospital: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+    pharmacy: "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
+    temple: "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png",
+    school: "http://maps.google.com/mapfiles/ms/icons/purple-dot.png",
+    store: "http://maps.google.com/mapfiles/ms/icons/orange-dot.png"
+  };
+
+  return icons[type] || null;
+}
 
 // Search inside radius
 function searchPlaces() {
